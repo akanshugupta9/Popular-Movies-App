@@ -12,12 +12,15 @@ import android.widget.ImageView;
  */
 
 public class CustomGrid extends BaseAdapter {
-    private Context mContext;
+    private Context context;
     private final int[] Imageid;
+    private static LayoutInflater inflater=null;
 
     public CustomGrid(Context c, int[] Imageid ) {
-        mContext = c;
+        context = c;
         this.Imageid = Imageid;
+        inflater = ( LayoutInflater )context.
+                getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
     @Override
@@ -37,24 +40,21 @@ public class CustomGrid extends BaseAdapter {
         // TODO Auto-generated method stub
         return 0;
     }
+    public class Holder
+    {
+        ImageView img;
+    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
-        View grid;
-        LayoutInflater inflater = (LayoutInflater) mContext
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        Holder holder=new Holder();
+        View rowView;
 
-        if (convertView == null) {
+        rowView = inflater.inflate(R.layout.gridlayout, null);
+        holder.img=(ImageView) rowView.findViewById(R.id.gridImage);
+        holder.img.setImageResource(Imageid[position]);
 
-            grid = new View(mContext);
-            grid = inflater.inflate(R.layout.gridlayout, null);
-            ImageView imageView = (ImageView)grid.findViewById(R.id.gridImage);
-            imageView.setImageResource(Imageid[position]);
-        } else {
-            grid = (View) convertView;
-        }
-
-        return grid;
+        return rowView;
     }
 }
