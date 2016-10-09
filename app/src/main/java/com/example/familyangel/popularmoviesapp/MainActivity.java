@@ -13,18 +13,12 @@ public class MainActivity extends AppCompatActivity {
 
     GridView grid;
 
-    int[] imageId = {
-            R.drawable.fifty,
-            R.drawable.harry,
-            R.drawable.inception,
-            R.drawable.inferno,
-            R.drawable.inside,
-            R.drawable.interstellar,
-            R.drawable.pele,
-            R.drawable.pi,
-            R.drawable.step,
-            R.drawable.tarzan,
-            R.drawable.transporter
+    String[] imageId = {
+            "/z6BP8yLwck8mN9dtdYKkZ4XGa3D.jpg",
+            "/T3LrH6bnV74llVbFpQsCBrGaU9.jpg",
+            "/uSHjeRVuObwdpbECaXJnvyDoeJK.jpg",
+            "/qXQinDhDZkTiqEGLnav0h1YSUu8.jpg",
+            "/5N20rQURev5CNDcMjHVUZhpoCNC.jpg"
     };
 
     @Override

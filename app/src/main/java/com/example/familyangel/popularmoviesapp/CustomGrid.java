@@ -7,16 +7,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
 /**
  * Created by FamilyAngel on 10/9/2016.
  */
 
 public class CustomGrid extends BaseAdapter {
     private Context context;
-    private final int[] Imageid;
+    private final String[] Imageid;
     private static LayoutInflater inflater=null;
 
-    public CustomGrid(Context c, int[] Imageid ) {
+    public CustomGrid(Context c, String[] Imageid ) {
         context = c;
         this.Imageid = Imageid;
         inflater = ( LayoutInflater )context.
@@ -53,7 +55,7 @@ public class CustomGrid extends BaseAdapter {
 
         rowView = inflater.inflate(R.layout.gridlayout, null);
         holder.img=(ImageView) rowView.findViewById(R.id.gridImage);
-        holder.img.setImageResource(Imageid[position]);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+Imageid[position]).into(holder.img);
 
         return rowView;
     }
