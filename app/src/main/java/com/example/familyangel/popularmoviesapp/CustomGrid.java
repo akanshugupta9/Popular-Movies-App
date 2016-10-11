@@ -15,12 +15,12 @@ import com.squareup.picasso.Picasso;
 
 public class CustomGrid extends BaseAdapter {
     private Context context;
-    private final String[] Imageid;
+    private movie[] movieArray;
     private static LayoutInflater inflater=null;
 
-    public CustomGrid(Context c, String[] Imageid ) {
+    public CustomGrid(Context c, movie[] movieArray ) {
         context = c;
-        this.Imageid = Imageid;
+        this.movieArray = movieArray;
         inflater = ( LayoutInflater )context.
                 getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
@@ -28,7 +28,7 @@ public class CustomGrid extends BaseAdapter {
     @Override
     public int getCount() {
         // TODO Auto-generated method stub
-        return Imageid.length;
+        return movieArray.length;
     }
 
     @Override
@@ -55,7 +55,7 @@ public class CustomGrid extends BaseAdapter {
 
         rowView = inflater.inflate(R.layout.gridlayout, null);
         holder.img=(ImageView) rowView.findViewById(R.id.gridImage);
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+Imageid[position]).into(holder.img);
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+movieArray[position].posterLink).into(holder.img);
 
         return rowView;
     }
