@@ -60,7 +60,7 @@ public class MovieAdapter extends BaseAdapter {
         Holder holder=new Holder();
         View rowView;
 
-        rowView = inflater.inflate(R.layout.gridlayout, null);
+        rowView = inflater.inflate(R.layout.griditem, null);
         Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+movies[position].posterLink)
                 .into((ImageView) rowView.findViewById(R.id.gridImage));
 
