@@ -16,4 +16,12 @@ public class Movie {
         posterLink = link;
         //userRating = rating;
     }
+
+    Movie(){
+        originalName = "";
+        releaseDate = "";
+        movieOverview = "";
+        posterLink = "";
+        userRating = 0;
+    }
 }
