@@ -1,13 +1,11 @@
 package com.example.familyangel.popularmoviesapp;
 
-import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
-
-import java.util.Arrays;
 
 /**
  * Created by FamilyAngel on 10/11/2016.
@@ -33,7 +31,7 @@ public class MainActivityFragment extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.gridlayout, container, false);
 
-        movieAdapter = new MovieAdapter(getActivity(), Arrays.asList(data));
+        movieAdapter = new MovieAdapter(getActivity(), data);
 
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.gridItem);
