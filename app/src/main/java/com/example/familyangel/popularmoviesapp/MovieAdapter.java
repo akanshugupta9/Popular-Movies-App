@@ -37,13 +37,13 @@ public class MovieAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return getCount();
+        return movies.size();
     }
 
     @Override
-    public Object getItem(int position) {
+    public Movie getItem(int position) {
         // TODO Auto-generated method stub
-        return position;
+        return movies.get(position);
     }
 
     @Override

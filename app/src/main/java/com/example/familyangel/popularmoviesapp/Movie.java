@@ -1,10 +1,12 @@
 package com.example.familyangel.popularmoviesapp;
 
+import java.io.Serializable;
+
 /**
  * Created by FamilyAngel on 10/11/2016.
  */
 
-public class Movie {
+public class Movie implements Serializable {
     String originalName, releaseDate, movieOverview, posterLink;
     double userRating;
 

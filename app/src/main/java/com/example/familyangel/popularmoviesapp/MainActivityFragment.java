@@ -1,15 +1,16 @@
 package com.example.familyangel.popularmoviesapp;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import org.json.JSONArray;
@@ -46,35 +47,16 @@ public class MainActivityFragment extends Fragment {
 
     private void updateMovie(){
         FetchMovieTask movieTask = new FetchMovieTask();
-        //SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //String location = pref.getString(getString(R.string.pref_location_key),
-        //        getString(R.string.pref_location_default));
-        movieTask.execute();
+        SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortBy = pref.getString(getString(R.string.pref_sort_by_key),
+                getString(R.string.pref_sort_by_popular));
+        movieTask.execute(sortBy);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         updateMovie();
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.refresh, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-        if (id == R.id.action_refresh) {
-            FetchMovieTask movieTask = new FetchMovieTask();
-            movieTask.execute();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -94,10 +76,21 @@ public class MainActivityFragment extends Fragment {
         GridView gridView = (GridView) rootView.findViewById(R.id.gridItem);
         gridView.setAdapter(movieAdapter);
 
+        gridView.setOnItemClickListener(new android.widget.AdapterView.OnItemClickListener(){
+
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
+                Movie movie = (Movie) movieAdapter.getItem(position);
+                //Toast.makeText(getActivity(), movie.originalName, Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("movieDetails", movie);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
-    public class FetchMovieTask extends AsyncTask<Object, Void, Movie[]> {
+    public class FetchMovieTask extends AsyncTask<String, Void, Movie[]> {
 
         private Movie[] getMovieDataFromJson(String movieJsonStr)
                 throws JSONException {
@@ -145,7 +138,7 @@ public class MainActivityFragment extends Fragment {
                 results[i] = movie;
 
                 //Log.v(LOG_TAG, "Forecast entry: " + results[i].originalName + results[i].releaseDate + results[i].movieOverview
-                                //+ results[i].posterLink + results[i].userRating);
+                  //              + results[i].posterLink + results[i].userRating);
             }
 
 
@@ -156,7 +149,7 @@ public class MainActivityFragment extends Fragment {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         @Override
-        protected Movie[] doInBackground(Object... params) {
+        protected Movie[] doInBackground(String... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -169,7 +162,7 @@ public class MainActivityFragment extends Fragment {
                 // Construct the URL for the OpenWeatherMap query
                 // Possible parameters are avaiable at OWM's forecast API page, at
                 // http://openweathermap.org/API#forecast
-                String baseUrl = "http://api.themoviedb.org/3/movie/popular?";
+                String baseUrl = "http://api.themoviedb.org/3/movie/"+params[0]+"?";
                 String apiKey = "api_key=" + "ENTER_YOUR_KEY_HERE";
                 URL url = new URL(baseUrl.concat(apiKey));
 
@@ -200,7 +193,7 @@ public class MainActivityFragment extends Fragment {
                     return null;
                 }
                 movieJsonStr = buffer.toString();
-                Log.v(LOG_TAG, "movieJsonStr data: " + movieJsonStr);
+                //Log.v(LOG_TAG, "movieJsonStr data: " + movieJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
