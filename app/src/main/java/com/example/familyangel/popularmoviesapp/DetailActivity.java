@@ -91,13 +91,17 @@ public class DetailActivity extends ActionBarActivity {
             Intent intent = getActivity().getIntent();
 
             View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
-                Movie movie = (Movie) intent.getSerializableExtra("moveDetails");
+            if (intent != null && intent.hasExtra("value")) {
+                //Bundle bundle = intent.getExtras();
+
+                Movie movie=
+                        (Movie)intent.getSerializableExtra("value");
+                //Movie movie = (Movie) intent.getSerializableExtra("movieDetails");
 
 
-                final String LOG_TAG = MainActivityFragment.FetchMovieTask.class.getSimpleName();
-                Log.v(LOG_TAG, movie.originalName);
-                Toast.makeText(getActivity(), movie.originalName, Toast.LENGTH_SHORT).show();
+                //final String LOG_TAG = MainActivityFragment.FetchMovieTask.class.getSimpleName();
+                //Log.v(LOG_TAG, movie.originalName);
+                //Toast.makeText(getActivity(), movie.originalName, Toast.LENGTH_SHORT).show();
 
                 Picasso.with(getContext()).load("http://image.tmdb.org/t/p/w185/"+movie.posterLink)
                         .into((ImageView) rootView.findViewById(R.id.detail_poster));

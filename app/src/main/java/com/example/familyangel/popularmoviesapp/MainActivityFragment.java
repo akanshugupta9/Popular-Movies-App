@@ -82,7 +82,9 @@ public class MainActivityFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long l) {
                 Movie movie = (Movie) movieAdapter.getItem(position);
                 //Toast.makeText(getActivity(), movie.originalName, Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(getActivity(), DetailActivity.class).putExtra("movieDetails", movie);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("value", movie);
+                Intent intent = new Intent(getActivity(), DetailActivity.class).putExtras(bundle);
                 startActivity(intent);
             }
         });
@@ -228,6 +230,7 @@ public class MainActivityFragment extends Fragment {
             for(int i = 0; i < result.length; i++){
                 movieAdapter.add(result[i]);
             }
+
         }
     }
 }
