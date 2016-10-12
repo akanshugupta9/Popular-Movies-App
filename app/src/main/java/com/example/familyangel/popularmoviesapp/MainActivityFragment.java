@@ -22,6 +22,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by FamilyAngel on 10/11/2016.
@@ -31,13 +32,7 @@ public class MainActivityFragment extends Fragment {
 
     private MovieAdapter movieAdapter;
 
-    Movie[] data = {
-            new Movie("The Magnificent Seven", "/z6BP8yLwck8mN9dtdYKkZ4XGa3D.jpg"),
-            new Movie("Captain America: Civil War", "/5N20rQURev5CNDcMjHVUZhpoCNC.jpg"),
-            new Movie("Miss Peregrine's Home for Peculiar Children", "/uSHjeRVuObwdpbECaXJnvyDoeJK.jpg\""),
-            new Movie("Suicide Squad", "/e1mjopzAS2KNsvpbpahQ1a6SkSn.jpg"),
-            new Movie("Independence Day: Resurgence", "/9KQX22BeFzuNM66pBA6JbiaJ7Mi.jpg")
-    };
+
 
     public MainActivityFragment() {
     }
@@ -47,6 +42,20 @@ public class MainActivityFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+    }
+
+    private void updateMovie(){
+        FetchMovieTask movieTask = new FetchMovieTask();
+        //SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        //String location = pref.getString(getString(R.string.pref_location_key),
+        //        getString(R.string.pref_location_default));
+        movieTask.execute();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateMovie();
     }
 
     @Override
@@ -71,9 +80,15 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final String LOG_TAG = FetchMovieTask.class.getSimpleName();
         View rootView = inflater.inflate(R.layout.gridlayout, container, false);
 
+        ArrayList<Movie> data = new ArrayList<Movie>();
+
         movieAdapter = new MovieAdapter(getActivity(), data);
+        for(int i = 0; i < movieAdapter.getCount(); i++){
+            Log.v(LOG_TAG, "data : " + movieAdapter.movies.get(i).originalName);
+        }
 
         // Get a reference to the ListView, and attach this adapter to it.
         GridView gridView = (GridView) rootView.findViewById(R.id.gridItem);
@@ -82,7 +97,7 @@ public class MainActivityFragment extends Fragment {
         return rootView;
     }
 
-    public class FetchMovieTask extends AsyncTask<Void, Void, Void> {
+    public class FetchMovieTask extends AsyncTask<Object, Void, Movie[]> {
 
         private Movie[] getMovieDataFromJson(String movieJsonStr)
                 throws JSONException {
@@ -115,19 +130,22 @@ public class MainActivityFragment extends Fragment {
 
                 // Get the JSON object representing the day
                 JSONObject movieDetails = movieArray.getJSONObject(i);
+                Movie movie = new Movie();
 
-                Log.v(LOG_TAG, "Forecast entry: " + movieDetails.getString(MOV_TITLE) + movieDetails.getString(MOV_DATE)
-                + movieDetails.getString(MOV_OVERVIEW) + movieDetails.getString(MOV_POSTER) + movieDetails.getDouble(MOV_VOTE));
+                //Log.v(LOG_TAG, "Forecast entry: " + movieDetails.getString(MOV_TITLE) + movieDetails.getString(MOV_DATE)
+                //+ movieDetails.getString(MOV_OVERVIEW) + movieDetails.getString(MOV_POSTER) + movieDetails.getDouble(MOV_VOTE));
 
 
-                results[i].originalName = movieDetails.getString(MOV_TITLE);
-                results[i].releaseDate = movieDetails.getString(MOV_DATE);
-                results[i].movieOverview = movieDetails.getString(MOV_OVERVIEW);
-                results[i].posterLink = movieDetails.getString(MOV_POSTER);
-                results[i].userRating = movieDetails.getDouble(MOV_VOTE);
+                movie.originalName = movieDetails.getString(MOV_TITLE);
+                movie.releaseDate = movieDetails.getString(MOV_DATE);
+                movie.movieOverview = movieDetails.getString(MOV_OVERVIEW);
+                movie.posterLink = movieDetails.getString(MOV_POSTER);
+                movie.userRating = movieDetails.getDouble(MOV_VOTE);
 
-                Log.v(LOG_TAG, "Forecast entry: " + results[i].originalName + results[i].releaseDate + results[i].movieOverview
-                                + results[i].posterLink + results[i].userRating);
+                results[i] = movie;
+
+                //Log.v(LOG_TAG, "Forecast entry: " + results[i].originalName + results[i].releaseDate + results[i].movieOverview
+                                //+ results[i].posterLink + results[i].userRating);
             }
 
 
@@ -138,7 +156,7 @@ public class MainActivityFragment extends Fragment {
         private final String LOG_TAG = FetchMovieTask.class.getSimpleName();
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Movie[] doInBackground(Object... params) {
             // These two need to be declared outside the try/catch
             // so that they can be closed in the finally block.
             HttpURLConnection urlConnection = null;
@@ -202,13 +220,21 @@ public class MainActivityFragment extends Fragment {
             }
 
             try {
-                getMovieDataFromJson(movieJsonStr);
+                return  getMovieDataFromJson(movieJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
             }
 
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Movie[] result) {
+            movieAdapter.clear();
+            for(int i = 0; i < result.length; i++){
+                movieAdapter.add(result[i]);
+            }
         }
     }
 }

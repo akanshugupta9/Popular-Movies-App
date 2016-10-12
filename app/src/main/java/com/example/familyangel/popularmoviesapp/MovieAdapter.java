@@ -2,18 +2,16 @@ package com.example.familyangel.popularmoviesapp;
 
 import android.content.Context;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
-import static java.security.AccessController.getContext;
+import java.util.ArrayList;
 
 /**
  * Created by FamilyAngel on 10/11/2016.
@@ -21,9 +19,9 @@ import static java.security.AccessController.getContext;
 
 public class MovieAdapter extends BaseAdapter {
     FragmentActivity context;
-    Movie[] movies;
+    ArrayList<Movie> movies;
     private static LayoutInflater inflater=null;
-    public MovieAdapter(FragmentActivity mainActivity, Movie[] movies) {
+    public MovieAdapter(FragmentActivity mainActivity, ArrayList<Movie> movies) {
         // TODO Auto-generated constructor stub
         this.movies = movies;
         context=mainActivity;
@@ -32,10 +30,14 @@ public class MovieAdapter extends BaseAdapter {
 
     }
 
+    public void add(Movie movie){
+        movies.add(movie);
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getCount() {
-        // TODO Auto-generated method stub
-        return movies.length;
+        return 0;
     }
 
     @Override
@@ -50,6 +52,10 @@ public class MovieAdapter extends BaseAdapter {
         return position;
     }
 
+    public void clear(){
+        movies.clear();
+    }
+
     public class Holder
     {
         ImageView img;
@@ -61,7 +67,7 @@ public class MovieAdapter extends BaseAdapter {
         View rowView;
 
         rowView = inflater.inflate(R.layout.griditem, null);
-        Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+movies[position].posterLink)
+        Picasso.with(context).load("http://image.tmdb.org/t/p/w185/"+movies.get(position).posterLink)
                 .into((ImageView) rowView.findViewById(R.id.gridImage));
 
         return rowView;
