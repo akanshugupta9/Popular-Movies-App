@@ -37,7 +37,7 @@ public class MovieAdapter extends BaseAdapter {
 
     @Override
     public int getCount() {
-        return 0;
+        return getCount();
     }
 
     @Override
