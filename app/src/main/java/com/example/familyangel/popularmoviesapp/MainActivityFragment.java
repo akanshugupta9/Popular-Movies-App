@@ -215,7 +215,8 @@ public class MainActivityFragment extends Fragment {
             }
 
             try {
-                return  getMovieDataFromJson(movieJsonStr);
+                if(movieJsonStr != null)
+                    return  getMovieDataFromJson(movieJsonStr);
             } catch (JSONException e) {
                 Log.e(LOG_TAG, e.getMessage(), e);
                 e.printStackTrace();
@@ -227,8 +228,10 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(Movie[] result) {
             movieAdapter.clear();
-            for(int i = 0; i < result.length; i++){
-                movieAdapter.add(result[i]);
+            if(result != null) {
+                for (int i = 0; i < result.length; i++) {
+                    movieAdapter.add(result[i]);
+                }
             }
 
         }
